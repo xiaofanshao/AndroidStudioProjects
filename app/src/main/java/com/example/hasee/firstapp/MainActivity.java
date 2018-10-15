@@ -3,6 +3,8 @@ package com.example.hasee.firstapp;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -27,11 +29,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+    private static final int UPDATE_TODAY_WEATHER=1;
+
     private ImageView mUpdateBtn;
 
     private TextView cityTv,timeTv,humidityTv,weekTv,pmDataTv,pmQuailityTv
             ,temperatureTv,climateTv,windTv,city_name_Tv;
     private ImageView weatherImg,pmImg;
+
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case UPDATE_TODAY_WEATHER:
+                    updateTodayWeather((TodayWeather) msg.obj);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
 
 
     @Override
@@ -74,6 +93,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
     }
+
     private void queryWeatherCode(String cityCode){
         final String address="http://wthrcdn.etouch.cn/WeatherApi?citykey="+cityCode;
         Log.d("myWeather",address);
@@ -103,6 +123,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     todayWeather=parseXMl(responseStr);
                     if(todayWeather!=null){
                         Log.d("myWeather",todayWeather.toString());
+
+                        Message msg=new Message();
+                        msg.what=UPDATE_TODAY_WEATHER;
+                        msg.obj=todayWeather;
+                        mHandler.sendMessage(msg);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -238,6 +263,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
         climateTv.setText("N/A");
         windTv.setText("N/A");
     }
+
+    private void updateTodayWeather(TodayWeather todayWeather){
+        city_name_Tv.setText(todayWeather.getCity()+"天气");
+        cityTv.setText(todayWeather.getCity());
+        timeTv.setText(todayWeather.getUpdatetime()+"发布");
+        humidityTv.setText("湿度:"+todayWeather.getShidu());
+        pmDataTv.setText(todayWeather.getPm25());
+        pmQuailityTv.setText(todayWeather.getQuality());
+        weekTv.setText(todayWeather.getDate());
+        temperatureTv.setText(todayWeather.getLow()+"~"+todayWeather.getHigh());
+
+        climateTv.setText(todayWeather.getType());
+        windTv.setText("风力："+todayWeather.getFengli());
+        Toast.makeText(this,"更新成功！",Toast.LENGTH_SHORT).show();
+
+    }
+
 
 
 }
