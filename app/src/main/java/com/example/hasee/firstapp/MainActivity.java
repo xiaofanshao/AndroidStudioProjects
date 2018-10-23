@@ -1,6 +1,7 @@
 package com.example.hasee.firstapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private static final int UPDATE_TODAY_WEATHER=1;
 
     private ImageView mUpdateBtn;
+
+    private  ImageView mCitySelect;
 
     private TextView cityTv,timeTv,humidityTv,weekTv,pmDataTv,pmQuailityTv
             ,temperatureTv,climateTv,windTv,city_name_Tv;
@@ -71,6 +74,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Toast.makeText(MainActivity.this,"网络挂了",Toast.LENGTH_LONG).show();
         }
 
+        mCitySelect=(ImageView)findViewById(R.id.title_city_manager);
+        mCitySelect.setOnClickListener(this);
+
        initView();
 
 
@@ -78,6 +84,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        if(view.getId()==R.id.title_city_manager){
+            Intent i=new Intent(this,SelectCity.class);
+            startActivity(i);
+        }
+
         if(view.getId() == R.id.title_update_btn){
             SharedPreferences sharedPreferences=getSharedPreferences("config",MODE_PRIVATE);
             String cityCode= sharedPreferences.getString("main_city_code","101010100");
