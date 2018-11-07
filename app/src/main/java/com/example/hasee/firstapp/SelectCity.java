@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,9 +30,20 @@ public class SelectCity extends Activity implements View.OnClickListener {
         mlistview=(ListView)findViewById(R.id.listview);
 
         MyApplication  myApplication=(MyApplication) getApplication();
-        List<City> list=myApplication.getCityList();
-        ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,list);
+        final List<City> cityList=myApplication.getCityList();
+        ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,cityList);
         mlistview.setAdapter(adapter);
+        mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                City ct=cityList.get(position);
+                Intent i=new Intent();
+                i.putExtra("cityCode",ct.getNumber());
+                setResult(RESULT_OK,i);
+                finish();
+
+            }
+        });
 
 
 
@@ -43,7 +55,7 @@ public class SelectCity extends Activity implements View.OnClickListener {
         switch (v.getId()){
             case R.id.title_back:
                 Intent i=new Intent();
-                i.putExtra("cityCode","101160101");
+                i.putExtra("cityCode","101010100");
                 setResult(RESULT_OK,i);
                 finish();
                 break;
