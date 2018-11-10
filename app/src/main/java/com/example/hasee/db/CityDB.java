@@ -38,4 +38,24 @@ public class CityDB {
         return list;
     }
 
+    public List<City> inquiry(String s){
+        List<City> list=new ArrayList<>();
+        //SELECT * FROM city WHERE city="北" OR province="北京"
+        Cursor c=db.rawQuery("SELECT * FROM "+ CITY_TABLE_NAME+" WHERE city= \""+s+"\" OR province=\""+s+"\"",null);
+        if(c.getColumnCount()!=0){
+            while(c.moveToNext()){
+                String province=c.getString(c.getColumnIndex("province"));
+                String city=c.getString(c.getColumnIndex("city"));
+                String number=c.getString(c.getColumnIndex("number"));
+                String allPY=c.getString(c.getColumnIndex("allpy"));
+                String allFirstPY=c.getString(c.getColumnIndex("allfirstpy"));
+                String firstPY=c.getString(c.getColumnIndex("firstpy"));
+                City item=new City(province,city,number,firstPY,allPY,allFirstPY);
+                list.add(item);
+            }
+        }
+
+        return list;
+    }
+
 }

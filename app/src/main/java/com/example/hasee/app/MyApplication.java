@@ -44,6 +44,11 @@ public class MyApplication extends Application {
     public List<City> getCityList(){
         return mCityList;
     }
+    public List<City> getCityListByInquiry(String s){
+        return mCityDB.inquiry(s);
+    }
+
+
     private boolean prepareCityList(){
         mCityList=mCityDB.getAllCity();
         int i=0;

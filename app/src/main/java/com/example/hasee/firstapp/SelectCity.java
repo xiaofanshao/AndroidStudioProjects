@@ -3,21 +3,27 @@ package com.example.hasee.firstapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.hasee.app.MyApplication;
 import com.example.hasee.bean.City;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectCity extends Activity implements View.OnClickListener {
 
     private ImageView mBackBtn;
     private ListView mlistview;
+    private EditText mEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -29,9 +35,9 @@ public class SelectCity extends Activity implements View.OnClickListener {
         mBackBtn.setOnClickListener(this);
         mlistview=(ListView)findViewById(R.id.listview);
 
-        MyApplication  myApplication=(MyApplication) getApplication();
+        final MyApplication  myApplication=(MyApplication) getApplication();
         final List<City> cityList=myApplication.getCityList();
-        ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,cityList);
+        final ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,cityList);
         mlistview.setAdapter(adapter);
         mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -44,6 +50,41 @@ public class SelectCity extends Activity implements View.OnClickListener {
 
             }
         });
+
+
+
+        mEditText=(EditText)findViewById(R.id.search_bar);
+        TextWatcher mTextWatcher=new TextWatcher() {
+            private List<City> list;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                MyApplication myApplication1=(MyApplication)getApplication();
+                List<City> list=myApplication.getCityListByInquiry(s.toString());
+
+
+                ArrayAdapter<City> adapter=new ArrayAdapter<City>(SelectCity.this,android.R.layout.simple_list_item_1,list);
+                mlistview.setAdapter(adapter);
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+
+            }
+        };
+        mEditText.addTextChangedListener(mTextWatcher);
+
+
 
 
 
