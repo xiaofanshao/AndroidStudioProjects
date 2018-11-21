@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.hasee.app.MyApplication;
 import com.example.hasee.bean.City;
@@ -25,6 +26,8 @@ public class SelectCity extends Activity implements View.OnClickListener {
     private ListView mlistview;
     private EditText mEditText;
 
+    private List<City> cityList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,8 +39,8 @@ public class SelectCity extends Activity implements View.OnClickListener {
         mlistview=(ListView)findViewById(R.id.listview);
 
         final MyApplication  myApplication=(MyApplication) getApplication();
-        final List<City> cityList=myApplication.getCityList();
-        final ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,cityList);
+        cityList=myApplication.getCityList();
+        ArrayAdapter<City> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,cityList);
         mlistview.setAdapter(adapter);
         mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,7 +58,7 @@ public class SelectCity extends Activity implements View.OnClickListener {
 
         mEditText=(EditText)findViewById(R.id.search_bar);
         TextWatcher mTextWatcher=new TextWatcher() {
-            private List<City> list;
+
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -66,10 +69,10 @@ public class SelectCity extends Activity implements View.OnClickListener {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 MyApplication myApplication1=(MyApplication)getApplication();
-                List<City> list=myApplication.getCityListByInquiry(s.toString());
+                cityList=myApplication.getCityListByInquiry(s.toString());
 
 
-                ArrayAdapter<City> adapter=new ArrayAdapter<City>(SelectCity.this,android.R.layout.simple_list_item_1,list);
+                ArrayAdapter<City> adapter=new ArrayAdapter<City>(SelectCity.this,android.R.layout.simple_list_item_1,cityList);
                 mlistview.setAdapter(adapter);
 
 

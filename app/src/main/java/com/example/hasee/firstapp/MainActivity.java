@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hasee.bean.TodayWeather;
+import com.example.hasee.util.BDLocationUtils;
 import com.example.hasee.util.NetUtil;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -40,6 +41,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             ,temperatureTv,climateTv,windTv,city_name_Tv;
     private ImageView weatherImg,pmImg;
 
+//    用于定位的那个图标
+    private ImageView locationView;
+
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -65,6 +69,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mUpdateBtn=(ImageView)findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener( this);
+        locationView=(ImageView)findViewById(R.id.title_location);
 
         if(NetUtil.getNetworkState(this)!=NetUtil.NETWORN_NONE){
             Log.d("myWeather","网络ok");
@@ -76,6 +81,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mCitySelect=(ImageView)findViewById(R.id.title_city_manager);
         mCitySelect.setOnClickListener(this);
+        locationView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                BDLocationUtils bdLocationUtils = new BDLocationUtils(MainActivity.this);
+                bdLocationUtils.doLocation();//开启定位
+                bdLocationUtils.mLocationClient.start();//开始定位
+
+            }
+        });
+
 
        initView();
 

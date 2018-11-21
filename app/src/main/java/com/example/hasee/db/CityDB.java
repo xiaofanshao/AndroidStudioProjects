@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CityDB {
-    public static final String CITY_DB_NAME="city.db";
-    private static final String CITY_TABLE_NAME="city";
+    public static final String CITY_DB_NAME="city.db";//给外面用的
+    private static final String CITY_TABLE_NAME="city";//给自己用的
     private SQLiteDatabase db;
 
     public CityDB(Context context, String path){
@@ -41,7 +41,7 @@ public class CityDB {
     public List<City> inquiry(String s){
         List<City> list=new ArrayList<>();
         //SELECT * FROM city WHERE city="北" OR province="北京"
-        Cursor c=db.rawQuery("SELECT * FROM "+ CITY_TABLE_NAME+" WHERE city= \""+s+"\" OR province=\""+s+"\"",null);
+        Cursor c=db.rawQuery("SELECT * FROM "+ CITY_TABLE_NAME+" WHERE city LIKE \""+s+"%\" OR province=\""+s+"\"",null);
         if(c.getColumnCount()!=0){
             while(c.moveToNext()){
                 String province=c.getString(c.getColumnIndex("province"));
